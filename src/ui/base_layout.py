@@ -1,0 +1,87 @@
+
+import streamlit as st
+
+
+def style_background_home():
+
+    st.markdown("""
+        <style>
+
+                .stApp {
+                    background: #091540 !important;
+                }
+
+                .stApp div[data-testid="stColumn"]{
+                    background-color:#E0E3FF !important;
+                    padding:2.5rem !important;
+                    border-radius: 5rem !important;
+                    }
+        </style>  
+
+                """
+            ,unsafe_allow_html=True)
+
+
+def style_base_layout():
+    st.markdown("""
+        <style>
+        /*@import url('https://fonts.googleapis.com/css2?family=Climate+Crisis&family=Outfit:wght@100..900&display=swap');*/
+
+        /* Hide Streamlit interface elements */
+        #MainMenu,
+        footer,
+        [data-testid="stHeader"] {
+            visibility: hidden;
+        }
+
+        /* Main content spacing */
+        .block-container {
+            padding-top: 1.5rem !important;
+        }
+
+        /* Main headings */
+        h1, h2 {
+            /*font-family: 'Climate Crisis', sans-serif !important;*/
+            line-height: 1.1 !important;
+            margin-bottom: 0 !important;
+        }
+
+        h1 {
+            font-size: 3.5rem !important;
+        }
+
+        h2 {
+            font-size: 2rem !important;
+        }
+
+        /* Body text */
+        h3, h4, p, label, [data-testid="stMarkdownContainer"] {
+         /*   font-family: 'Outfit', sans-serif;*/
+        }
+
+        /* Primary buttons */
+        .stButton button[kind="primary"] {
+            border-radius: 1.5rem !important;
+            background-color: #5865F2 !important;
+            color: white !important;
+            padding: 10px 20px !important;
+            border: none !important;
+            transition: transform 0.25s ease-in-out !important;
+        }
+
+        /* Secondary buttons */
+        .stButton button[kind="secondary"] {
+            border-radius: 1.5rem !important;
+            background-color: #EB459E !important;
+            color: white !important;
+            padding: 10px 20px !important;
+            border: none !important;
+            transition: transform 0.25s ease-in-out !important;
+        }
+
+        /* Hover effect */
+        .stButton button:hover {
+            transform: scale(1.05);
+        }
+        </style>
+    """, unsafe_allow_html=True)
