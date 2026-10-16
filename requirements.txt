@@ -1,25 +1,25 @@
-streamlit
-# Utilitites 
-numpy
-pandas
 
-# FACE RECOGNITION
-scikit-learn
-# dlib for specific version of python 
-# C:\Users\Vikash\Downloads\dlib-19.24.1-cp311-cp311-win_amd64.whl
+streamlit==1.64.0
 
-# github model 
-git+https://github.com/ageitgey/face_recognition_models
-setuptools<70.0.0
+# Utilities and data processing
+numpy==2.4.6
+pandas==3.0.6
+scikit-learn==1.9.1
+setuptools==80.9.0
 
-# for postgrey sql
-supabase
-# for hashing
-bcrypt
+# Face recognition
+dlib-bin==20.0.1.post1
+face-recognition==1.3.0
+git+https://github.com/ageitgey/face_recognition_models.git
 
-# for QR code
-segno
-# image processing
-pillow
+# Supabase and authentication
+supabase==2.31.0
+bcrypt==5.0.0
 
+# QR codes and images
+segno==1.6.6
+Pillow==12.3.0
 
+# Voice recognition
+librosa==0.11.0
+resemblyzer==0.1.4
