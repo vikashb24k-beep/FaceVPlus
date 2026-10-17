@@ -6,17 +6,36 @@ from src.components.footer import footer_dashboard
 from src.database.db import check_teacher_exists, create_teacher, teacher_login
 import time
 
+def teacher_dashboard():
+    teacher_data = st.session_state.teacher_data
+    st.header(f""" 
+        welcome, {teacher_data['name']}    
+""")
+
 
 def teacher_screen():
 
     style_background_dashboard()
     style_base_layout()
 
-    if 'teacher_login_type' not in st.session_state or st.session_state['teacher_login_type'] == 'login':
+
+    if "teacher_data" in st.session_state:
+        teacher_dashboard()
+    elif 'teacher_login_type' not in st.session_state or st.session_state['teacher_login_type'] == 'login':
         teacher_screen_login()
     elif st.session_state['teacher_login_type'] == 'register':
         teacher_screen_register()
 
+def login_teacher(username,password):
+    if not username or not password:
+        return False
+    teacher = teacher_login(username,password)
+    if teacher:
+        st.session_state.user_role='teacher'
+        st.session_state.teacher_data = teacher
+        st.session_state.is_logged_in = True
+        return True
+    return False
 
 # login
 def teacher_screen_login():
@@ -64,7 +83,7 @@ def teacher_screen_login():
             if not teacher_username.strip() or not teacher_pass:
                 st.warning("Please enter username and password.")
 
-            elif teacher_login(teacher_username.strip(), teacher_pass):
+            elif login_teacher(teacher_username, teacher_pass):
                 st.toast("Welcome back!", icon="👋")
                 time.sleep(1)
                 st.rerun()
