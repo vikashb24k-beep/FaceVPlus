@@ -15,7 +15,7 @@ __pycache__/
 *$py.class
 
 # Streamlit local configuration
-.streamlit/secrets.toml
+.streamlit/
 
 # Build and distribution files
 build/
