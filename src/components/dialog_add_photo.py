@@ -45,8 +45,11 @@ def add_photoes_dialog():
             st.rerun()
             
     st.divider()
+    
     if st.button('Done',type='primary',width='stretch'):
         st.rerun()
+
+
 
         
 
