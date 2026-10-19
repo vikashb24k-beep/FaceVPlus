@@ -58,7 +58,7 @@ The application provides separate teacher and student workflows, subject enrollm
 | Python | Application logic and recognition pipelines |
 | Streamlit | Web interface and dialogs |
 | Supabase | Hosted PostgreSQL database and application data |
-| pandas | Attendance tables and data processing |
+| pandas | Attendance tables and data processings |
 | NumPy | Numerical operations and embeddings |
 | Pillow (PIL) | Image loading and handling |
 | dlib / face-recognition-models | Face detection and face embeddings, where configured |
