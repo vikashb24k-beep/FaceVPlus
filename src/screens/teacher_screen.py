@@ -13,7 +13,7 @@ from src.components.dialog_add_photo import add_photoes_dialog
 from src.database.config import supabase
 from src.pipelines.face_pipeline import predict_attendance 
 from src.components.dialog_attendance_result import attendance_result_dialog 
-# from src.components.dialog_attendance_result import voice_attendance_dialog
+from src.components.dialog_voice_attendance import voice_attendance_dialog
 from src.database.db import (
     check_teacher_exists,
     create_teacher,
@@ -305,7 +305,7 @@ def teacher_tab_take_attendance():
             key='use_voice_attendance'
         ):
             st.header('Voice Attendance')
-            # Call voice_attendance_dialog() here
+            voice_attendance_dialog(selected_subject_id) 
 
 
 def teacher_tab_manage_subjects():
@@ -354,7 +354,7 @@ def teacher_tab_manage_subjects():
 
 def teacher_tab_attendance_records():
     st.header("Attendance Records")
-
+    
 
 
 def login_teacher(username, password):
