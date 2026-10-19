@@ -44,7 +44,7 @@ The application provides separate teacher and student workflows, subject enrollm
 - Support for voice-profile registration, where enabled.
 
 ### Recognition and Data
-- Face-recognition pipeline based on the models and libraries configured in the project.
+- Face-recognition pipeline based on the models and libraries configured in  project. 
 - Voice-recognition pipeline for processing recorded audio.
 - Supabase/PostgreSQL integration for application data.
 - Streamlit session state for temporary UI and attendance-review data.
