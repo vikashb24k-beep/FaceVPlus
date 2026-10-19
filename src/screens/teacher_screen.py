@@ -215,7 +215,7 @@ def teacher_screen_login():
 
     teacher_username = st.text_input(
         "Enter username",
-        placeholder="ananyaroy"
+        placeholder="vikash"
     )
 
     teacher_pass = st.text_input(
@@ -318,12 +318,12 @@ def teacher_screen_register():
 
     teacher_username = st.text_input(
         "Enter username",
-        placeholder="ananyaroy"
+        placeholder="vikash"
     )
 
     teacher_name = st.text_input(
         "Enter name",
-        placeholder="Ananya Roy"
+        placeholder="vikkash kumar"
     )
 
     teacher_pass = st.text_input(
