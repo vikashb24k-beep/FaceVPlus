@@ -1,233 +1,450 @@
-# FaceVPlus — AI-Powered Face & Voice Attendance System
+# FaceVPlus — Face & Voice Recognition Attendance System
 
-FaceVPlus is an AI-powered attendance management system designed to simplify classroom attendance using facial recognition and optional voice-based identification. Built with Python and Streamlit, the application provides separate teacher and student interfaces, subject enrollment, attendance analysis, and attendance record management.
+FaceVPlus is a Python-based attendance management system built with Streamlit. It is designed to help teachers manage subjects and record student attendance using face and voice recognition.
 
-## ✨ Features
+The application provides separate teacher and student workflows, subject enrollment, classroom-photo analysis, voice-based attendance, attendance review, and database-backed records through Supabase.
 
-- **Face Recognition:** Identify registered students using facial embeddings.
-- **AI Attendance:** Analyze classroom photos captured through a camera or uploaded by a teacher.
-- **Teacher Dashboard:** Manage subjects and initiate attendance analysis.
-- **Student Dashboard:** Log in using facial recognition and view enrolled subjects and attendance statistics.
-- **Subject Enrollment:** Allow students to enroll in available subjects and unenroll when necessary.
-- **Attendance Tracking:** Record attendance status, timestamps, and the source photos used for identification.
-- **Optional Voice Enrollment:** Capture voice samples during student registration for voice-based identification.
-- **Supabase Integration:** Store student profiles, teacher information, subject enrollments, and attendance records.
-- **Interactive Interface:** Built with Streamlit, with custom styling and reusable UI components.
+> **Project status:** Under active development. Some features and setup steps may vary depending on the current implementation in your local repository.
 
-## 🛠️ Tech Stack
+## Table of Contents
+
+- [Features](#features)
+- [Technology Stack](#technology-stack)
+- [Project Structure](#project-structure)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Environment Configuration](#environment-configuration)
+- [Database Setup](#database-setup)
+- [Run the Application](#run-the-application)
+- [How to Use FaceVPlus](#how-to-use-facevplus)
+- [Recognition Pipeline](#recognition-pipeline)
+- [Attendance Data](#attendance-data)
+- [Troubleshooting](#troubleshooting)
+- [Security and Privacy](#security-and-privacy)
+- [Future Improvements](#future-improvements)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Features
+
+### Teacher Portal
+- Teacher registration and login, depending on the configured authentication flow.
+- Create and manage subjects.
+- Share subject details or enrollment links.
+- Enroll students in subjects.
+- Capture or upload classroom photos for face-based attendance.
+- Record attendance from classroom audio using voice recognition.
+- Review detected attendance before confirming and saving it.
+- View attendance records and reports, where implemented.
+
+### Student Portal
+- Student registration and face-based login, where enabled.
+- Student enrollment in available subjects.
+- View enrolled subjects and attendance information, where implemented.
+- Support for voice-profile registration, where enabled.
+
+### Recognition and Data
+- Face-recognition pipeline based on the models and libraries configured in the project.
+- Voice-recognition pipeline for processing recorded audio.
+- Supabase/PostgreSQL integration for application data.
+- Streamlit session state for temporary UI and attendance-review data.
+
+**Note:** Recognition accuracy depends on the quality of the enrolled face/voice samples, audio conditions, lighting, camera quality, and the matching thresholds configured in the recognition pipelines.
+
+## Technology Stack
 
 | Technology | Purpose |
 |---|---|
-| Python | Core application logic |
-| Streamlit | Interactive web application |
-| OpenCV / NumPy | Image processing |
-| dlib / face-recognition models | Facial detection and embeddings |
-| scikit-learn | Face classification |
-| Supabase | Database and backend services |
-| Pillow | Image handling |
-| Pandas | Attendance data processing |
-| Voice-processing pipeline | Optional voice embedding generation |
+| Python | Application logic and recognition pipelines |
+| Streamlit | Web interface and dialogs |
+| Supabase | Hosted PostgreSQL database and application data |
+| pandas | Attendance tables and data processing |
+| NumPy | Numerical operations and embeddings |
+| Pillow (PIL) | Image loading and handling |
+| dlib / face-recognition-models | Face detection and face embeddings, where configured |
+| scikit-learn | Machine-learning classification, where configured |
+| Audio-processing libraries | Audio preprocessing and voice recognition, according to `voice_pipeline.py` |
 
-## 📁 Project Structure
+Check your project's dependency file for the exact package versions used by your current environment.
+
+## Project Structure
+
+The following structure is based on the repository layout and modules currently used in the project. Some files may be added or renamed as development continues.
 
 ```text
 FaceVPlus/
-│
 ├── app.py
 ├── requirements.txt
 ├── README.md
 ├── .gitignore
-│
-├── src/
-│   ├── components/
-│   │   ├── header.py
-│   │   ├── footer.py
-│   │   ├── subject_card.py
-│   │   ├── dialog_enroll.py
-│   │   └── dialog_add_photoes.py
-│   │
-│   ├── database/
-│   │   ├── config.py
-│   │   └── db.py
-│   │
-│   ├── pipelines/
-│   │   ├── face_pipeline.py
-│   │   └── voice_pipeline.py
-│   │
-│   ├── screens/
-│   │   ├── student_screen.py
-│   │   └── teacher_screen.py
-│   │
-│   └── ui/
-│       └── base_layout.py
-│
-└── .streamlit/
-    └── secrets.toml
+├── .streamlit/
+│   └── secrets.toml              # Local secrets; do not commit
+└── src/
+    ├── components/
+    │   ├── dialog_add_photo.py
+    │   ├── dialog_attendance_result.py
+    │   ├── dialog_auto_enroll.py
+    │   ├── dialog_create_subject.py
+    │   ├── dialog_enroll.py
+    │   ├── dialog_share_subject.py
+    │   ├── dialog_voice_attendance.py
+    │   ├── footer.py
+    │   ├── header.py
+    │   └── subject_card.py
+    ├── database/
+    │   ├── config.py
+    │   └── db.py
+    ├── pipelines/
+    │   ├── face_pipeline.py
+    │   └── voice_pipeline.py
+    ├── screens/
+    │   ├── student_screen.py
+    │   └── teacher_screen.py
+    └── ui/
+        └── base_layout.py
 ```
 
-*The tree illustrates the project's main modules. Adjust filenames to match your actual repository.*
+This is a representative structure, not a guarantee that every listed file or directory exists in every version. Keep the names in this README aligned with the actual files in your repository.
 
-## 🚀 Getting Started
+## Requirements
 
-### 1. Clone the repository
+- Python version supported by all packages in your project's dependency file.
+- pip.
+- A Supabase project and its database credentials.
+- A working camera for live image capture, if using that feature.
+- A microphone or recorded audio for voice attendance.
+- Windows, Linux, or macOS. Installation of native packages such as `dlib` can vary by operating system and Python version.
+
+## Installation
+
+### 1. Clone the repository or open your project folder
+
+If the repository is hosted on GitHub:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/FaceVPlus.git
+git clone <YOUR_REPOSITORY_URL>
 cd FaceVPlus
 ```
 
-Replace `YOUR_USERNAME` with your GitHub username.
+If you already have the project locally, open a terminal in the `FaceVPlus` root directory.
 
 ### 2. Create a virtual environment
 
-**Windows PowerShell**
+**Windows PowerShell:**
 
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+py -m venv venv
+.\venv\Scripts\Activate.ps1
 ```
 
-If PowerShell blocks activation, use Command Prompt:
+If PowerShell blocks activation because of the execution policy, you can use Command Prompt instead:
 
-```cmd
-.venv\Scripts\activate.bat
+```bat
+venv\Scripts\activate.bat
+```
+
+**Linux/macOS:**
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
 ```
 
 ### 3. Install dependencies
+
+If `requirements.txt` exists:
 
 ```bash
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-Some facial-recognition dependencies, especially `dlib`, may require compatible Python versions, build tools, or additional system libraries.
+If the dependency file does not exist, create one from your working environment only after checking that the environment contains the packages needed by the project:
 
-### 4. Configure Supabase
-
-Create a project in [Supabase](https://supabase.com/) and configure your database tables to match the application's queries and schema.
-
-Create `.streamlit/secrets.toml` in your project directory:
-
-```toml
-SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL"
-SUPABASE_KEY = "YOUR_SUPABASE_API_KEY"
+```bash
+pip freeze > requirements.txt
 ```
 
-Replace the placeholders with your actual credentials. The key names must match those used by your database configuration code.
+Avoid generating a requirements file from an unrelated or polluted environment. Native packages such as `dlib` may require additional system dependencies or a compatible Python version.
 
-**Security:** Never commit `secrets.toml`, database passwords, or private API keys to GitHub.
+### 4. Configure Supabase secrets
 
-### 5. Run the application
+Create the local configuration directory and file:
+
+```text
+.streamlit/
+└── secrets.toml
+```
+
+Add your Supabase project URL and key:
+
+```toml
+SUPABASE_URL = "https://YOUR_PROJECT_REF.supabase.co"
+SUPABASE_KEY = "YOUR_SUPABASE_KEY"
+```
+
+Use the exact key name expected by `src/database/config.py`. If your code reads a different name, update either the configuration file or the code so the names match.
+
+For example, Streamlit secrets are accessed using item or attribute access:
+
+```python
+import streamlit as st
+from supabase import create_client
+
+supabase_url = st.secrets["SUPABASE_URL"]
+supabase_key = st.secrets["SUPABASE_KEY"]
+
+supabase = create_client(supabase_url, supabase_key)
+```
+
+Do **not** use `st.secrets("SUPABASE_URL")`; `st.secrets` is not a function.
+
+Never commit `.streamlit/secrets.toml`, API keys, passwords, or other credentials to Git.
+
+## Environment Configuration
+
+The application's database configuration should read credentials from Streamlit secrets or environment variables. Choose one approach and use it consistently.
+
+For local Streamlit secrets, the configuration file normally lives at:
+
+```text
+.streamlit/secrets.toml
+```
+
+For deployment, add the same required values to the hosting provider's secret/environment-variable settings instead of uploading the local secrets file.
+
+Before running the application, verify:
+- The Supabase URL is correct.
+- The key is valid for the intended application access.
+- The table names and column names in the database match the queries in `src/database/db.py`.
+- Required columns such as `username`, `student_id`, `teacher_id`, `subject_id`, and attendance fields are populated consistently with the schema actually used by the application.
+
+## Database Setup
+
+FaceVPlus uses Supabase as its hosted database. Create and configure the tables referenced by the queries in `src/database/db.py` and the screen/dialog modules.
+
+The current code has referenced tables such as:
+
+- `students` — student account details and recognition profiles.
+- `teachers` — teacher account details.
+- `subjects` — subjects created by teachers.
+- `subject_students` — relationship between students and subjects.
+- An attendance table — attendance records for a student and subject, with a timestamp and presence status.
+
+These are logical roles; use the exact table names, foreign keys, constraints, and column names required by your current SQL queries. Do not create duplicate tables solely because a name appears in this README.
+
+### Database checklist
+
+- Define primary keys for the tables.
+- Add appropriate foreign-key relationships.
+- Ensure required columns have values before inserting records.
+- Make sure the student-subject relationship prevents unintended duplicate enrollments.
+- Decide how duplicate attendance records for the same student, subject, and class session should be handled.
+- Configure Supabase Row Level Security (RLS) and policies before exposing the application publicly.
+- Test inserts, selects, updates, and deletes using the intended application role.
+
+**Important:** Never disable security policies on a public production database just to make an error disappear. Fix the policy or use a properly secured server-side operation.
+
+## Run the Application
+
+From the project root, activate the virtual environment and run:
 
 ```bash
 streamlit run app.py
 ```
 
-Open the local URL displayed in your terminal, usually:
+Streamlit normally opens the application in your browser. If it does not, use the local URL printed in the terminal, usually:
 
-`http://localhost:8501`
+```text
+http://localhost:8501
+```
 
-## 🧑‍🏫 How It Works
+To stop the server, press `Ctrl+C` in the terminal.
+
+## How to Use FaceVPlus
+
+The exact buttons and navigation depend on the current UI implementation.
 
 ### Teacher workflow
 
-1. Log in to the teacher dashboard.
-2. Create or select a subject.
-3. Add classroom photos using the camera or file uploader.
-4. Run facial recognition on the collected photos.
-5. Compare detected student IDs against the students enrolled in the selected subject.
-6. Review the attendance results and associated photo sources.
-7. Save attendance records through the application's attendance-recording workflow.
+1. Open the application and enter the teacher portal.
+2. Register or log in.
+3. Create a subject, or select an existing subject.
+4. Enroll students or share the subject information using the available enrollment workflow.
+5. Select the correct subject before starting attendance.
+6. For face attendance, capture or upload classroom photos.
+7. For voice attendance, record classroom audio and choose **Analyze Audio**.
+8. Review the proposed attendance results carefully.
+9. Choose **Confirm & Save** to persist the attendance, or **Discard** to cancel.
+10. Open the attendance report feature, if available, to review saved records.
 
 ### Student workflow
 
 1. Open the student portal.
-2. Capture a face image using the camera.
-3. The system attempts to identify the registered student.
-4. New students can register their name and facial features.
-5. Students can optionally provide a voice sample during registration.
-6. After login, students can view their enrolled subjects and attendance statistics.
+2. Register or log in using the configured authentication method.
+3. Complete any required face or voice profile enrollment.
+4. Enroll in a subject if the workflow allows it.
+5. View enrolled subjects and attendance details, where supported.
 
-## 🧠 Face Recognition Pipeline
+### Attendance review
 
-The face-recognition pipeline processes an image to identify registered students.
+Attendance should be reviewed before saving. A recognition result is a prediction, not proof of identity. Check false matches and missed students, particularly when multiple people speak at once or photos contain occluded faces.
 
-1. **Image capture:** Obtain an image from the camera or uploaded files.
-2. **Face detection:** Detect faces in the image.
-3. **Feature extraction:** Generate facial embeddings for detected faces.
-4. **Classification:** Compare or classify embeddings using the trained recognition model.
-5. **Identity matching:** Associate recognized identities with student records.
-6. **Attendance evaluation:** Match detected students against the selected subject's enrollment records.
+## Recognition Pipeline
 
-The system's accuracy depends on image quality, lighting, camera position, model configuration, and the quality of the enrolled facial samples.
+### Face recognition
 
-## 🎙️ Voice Recognition
+The face pipeline may include these stages, depending on the implementation in `src/pipelines/face_pipeline.py`:
 
-FaceVPlus includes a voice-processing pipeline and supports optional voice enrollment during registration.
+1. Capture or load an image.
+2. Detect faces in the image.
+3. Generate a numerical face embedding for each detected face.
+4. Compare the embedding with enrolled student profiles or pass it to a trained classifier.
+5. Associate accepted matches with student IDs.
+6. Present proposed attendance for teacher review.
 
-The voice pipeline can generate voice embeddings from audio samples. A complete voice-based attendance workflow also requires reliable speaker matching, suitable thresholds, and integration with attendance recording.
+Performance depends on image quality, pose, lighting, occlusion, and the quality of the enrolled samples.
 
-## 🗄️ Database
+### Voice recognition
 
-Supabase provides the backend database for application records.
+The voice pipeline may include these stages, depending on `src/pipelines/voice_pipeline.py`:
 
-The application currently references tables such as:
+1. Record or upload classroom audio.
+2. Preprocess the audio into the format expected by the pipeline.
+3. Extract voice features or embeddings.
+4. Compare the audio with enrolled voice profiles.
+5. Return candidate student IDs and match scores.
+6. Present proposed attendance for teacher review.
 
-- `students` — student profiles and recognition data.
-- `teachers` — teacher accounts.
-- `subject_students` — student-to-subject enrollment relationships.
-- Attendance records — student attendance status, subject, and timestamp.
+The application should use a validated matching threshold and handle uncertain matches explicitly. A score greater than zero should not automatically be treated as a reliable identity match unless the pipeline guarantees that meaning.
 
-Use the actual table names and column definitions from your Supabase schema when configuring a new environment.
+## Attendance Data
 
-## ☁️ Deployment
+An attendance record generally needs to identify:
 
-FaceVPlus can be deployed using [Streamlit Community Cloud](https://share.streamlit.io/).
+- The student.
+- The subject.
+- The time of the attendance event.
+- Whether the student was marked present.
 
-1. Push the project to GitHub.
-2. Ensure `requirements.txt` contains compatible dependencies.
-3. Create a new Streamlit app.
-4. Select the repository, branch, and `app.py` entrypoint.
-5. Add the required Supabase secrets in the app settings.
-6. Deploy and test the application.
+The precise schema must match the implementation of `create_attendance()` in `src/database/db.py`.
 
-Native dependencies such as `dlib` may need extra configuration. Test the face-recognition and audio pipelines in the deployment environment before using the application in a classroom.
+Before confirming attendance, the application should:
+- Verify the selected subject is correct.
+- Validate the generated records.
+- Prevent duplicate submissions where appropriate.
+- Report database errors without silently discarding them.
+- Clear temporary review state only after a successful save or an intentional discard.
 
-## 🔐 Privacy and Security
+## Troubleshooting
 
-FaceVPlus processes facial images, facial embeddings, and potentially voice data. These are sensitive biometric data.
+### `TypeError: voice_attendance_dialog() missing 1 required positional argument: 'selected_subject_id'`
 
-- Protect student and teacher records with appropriate database access policies.
-- Never expose private Supabase credentials in frontend code or public repositories.
-- Obtain appropriate consent before collecting biometric information.
-- Restrict access to attendance records.
-- Define secure retention and deletion policies for biometric samples.
-- Test authentication and authorization before public deployment.
+The dialog requires a subject ID:
 
-## 🛣️ Future Improvements
+```python
+voice_attendance_dialog(selected_subject_id)
+```
 
-- Complete voice-based attendance identification.
-- Add attendance reports and downloadable summaries.
-- Provide subject-wise and date-wise attendance analytics.
-- Add attendance correction and teacher review workflows.
-- Introduce stronger authentication and role-based access control.
-- Improve recognition performance in crowded classrooms.
-- Add configurable duplicate detection and attendance verification.
-- Improve deployment reliability and automated testing.
+Make sure the subject dropdown or selection logic defines `selected_subject_id` before opening the dialog.
 
-## 🤝 Contributing
+### `TypeError: 'Secrets' object is not callable`
 
-Contributions, bug reports, and feature suggestions are welcome.
+Use:
 
-1. Fork the repository.
-2. Create a feature branch.
-3. Commit your changes.
-4. Open a pull request describing your improvements.
+```python
+st.secrets["SUPABASE_URL"]
+```
 
-## 📄 License
+or:
 
-Choose a license for your project before distributing it publicly. If you intend to publish it as open source, you can add an appropriate license file, such as the MIT License, after deciding on the terms.
+```python
+st.secrets.SUPABASE_URL
+```
 
----
+Do not call `st.secrets(...)` as a function.
 
-**FaceVPlus — Making classroom attendance smarter with AI.**
+### `KeyError: 'teacher_id'` or another missing database key
+
+Inspect the actual returned dictionary and your Supabase table schema. Confirm that the selected row includes the expected column and that the code uses the correct key name.
+
+### `null value in column username violates not-null constraint`
+
+The insert operation is missing a required `username`. Collect and validate it before insertion, or adjust the schema only if a username is genuinely optional for the application.
+
+### Attendance results do not save
+
+- Check that `create_attendance()` uses the correct table and column names.
+- Confirm that each record matches the database schema.
+- Check Supabase logs and the exception returned by the database.
+- Verify foreign-key values refer to existing students and subjects.
+- Check Row Level Security policies.
+- Avoid swallowing exceptions without displaying or logging useful details.
+
+### Camera or microphone input is unavailable
+
+- Grant browser permission for the camera and microphone.
+- Use a supported browser.
+- Check that the selected input device works.
+- For remote access, use an appropriate HTTPS deployment; browser media permissions may not work on an ordinary HTTP address outside localhost.
+
+### Streamlit duplicate element ID
+
+Give repeated widgets distinct keys, for example:
+
+```python
+st.button("Confirm & Save", key=f"confirm_attendance_{subject_id}")
+```
+
+Keys should be stable and unique for the intended widget instance.
+
+### Packages fail to install
+
+- Activate the correct virtual environment first.
+- Check the Python version supported by the package.
+- Upgrade pip.
+- Review native build requirements for `dlib` and other compiled dependencies.
+- Install from the project's dependency file rather than mixing unrelated environments.
+
+## Security and Privacy
+
+FaceVPlus processes biometric information, which is sensitive personal data. Before using it with real students:
+
+- Obtain appropriate consent and follow applicable laws and institutional policies.
+- Explain what biometric data is collected, why it is collected, and how long it is retained.
+- Restrict access to face/voice embeddings and attendance records.
+- Protect credentials and never expose service-role keys in frontend code or public repositories.
+- Configure database access policies and use least-privilege access.
+- Use secure transport (HTTPS) for deployed applications.
+- Define procedures to correct attendance errors and delete data when required.
+- Do not rely exclusively on automated recognition for consequential attendance decisions; provide human review and a correction process.
+- Consider a non-biometric attendance alternative for users who cannot or do not wish to use biometric recognition.
+
+## Future Improvements
+
+Possible next steps include:
+
+- More robust authentication and role-based authorization.
+- Teacher attendance reports with date and subject filters.
+- Export attendance to CSV or Excel.
+- Better handling of uncertain recognition matches.
+- Session-based duplicate attendance prevention.
+- Improved voice segmentation for overlapping speakers.
+- Audit logs for attendance edits and confirmations.
+- Automated tests for database functions and recognition pipelines.
+- Deployment configuration and monitoring.
+- A documented consent, retention, and deletion workflow.
+
+## Contributing
+
+Contributions and suggestions are welcome.
+
+1. Create a branch for your change.
+2. Make a focused change.
+3. Test the affected workflow locally.
+4. Keep credentials and biometric samples out of commits.
+5. Submit a pull request or document the proposed change.
+
+## License
+
+No license has been specified here. Add a `LICENSE` file before distributing the project, and choose a license that fits your intended use.
