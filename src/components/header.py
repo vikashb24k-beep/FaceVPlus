@@ -16,14 +16,30 @@ def header_home():
     )
 
 
-def header_dashboard():
 
-    logo_url = "https://i.ibb.co/YTYGn5qV/logo.png"
-    
-    st.markdown(f"""
-        <div style="display:flex; align-items:center; justify-content:center; gap:10px">
-            <img src='{logo_url}' style='height:85px;' />
-            <h2 style='text-align:left; color:#5865F2'>FaceVPlus</h1>
-        </div>   
-                
-                """, unsafe_allow_html=True)
+def header_dashboard():
+    col1, col2 = st.columns(
+        [1, 4],
+        vertical_alignment="center"
+    )
+
+    with col1:
+        st.markdown(
+            "<span style='font-size:60px; color:#5865F2;'>"
+            ":material/dictionary:"
+            "</span>",
+            unsafe_allow_html=True
+        )
+
+    with col2:
+        st.markdown(
+            """
+            <h2 style="
+                color: #5865F2;
+                margin: 0;
+                font-size: 32px;
+                line-height: 1.2;
+            ">FaceVPlus</h2>
+            """,
+            unsafe_allow_html=True
+        )
